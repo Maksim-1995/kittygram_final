@@ -41,7 +41,7 @@ jobs:
       # Добавляем env-переменные для доступа к БД
       env:
         POSTGRES_USER: kittygram_user
-        POSTGRES_PASSWORD: password
+        POSTGRES_PASSWORD: mysecretpassword
         POSTGRES_DB: kittygram
         # Сервер БД запущен в Docker, но его порт проброшен на хост
         # Поэтому подключаемся к 127.0.0.1:5432
@@ -151,10 +151,10 @@ jobs:
       - name: Push to DockerHub
         uses: docker/build-push-action@v4
         with:
-          context: ./gateway/
+          context: ./nginx/
           push: true
           # Тут вместо username должен быть ваш логин на Docker Hub
-          tags: ${{ secrets.DOCKER_USERNAME }}/kittygram_nginx:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/kittygram_gateway:latest
 
 
   deploy:

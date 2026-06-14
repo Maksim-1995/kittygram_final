@@ -28,7 +28,7 @@ services:
       - static:/frontend_static
 
   gateway:
-    image: maksim1995/kittygram_nginx:latest
+    image: maksim1995/kittygram_gateway:latest
     ports:
       - "9000:80"
     volumes:

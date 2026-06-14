@@ -1,5 +1,11 @@
-services:
+version: '3.8'
 
+volumes:
+  pg_data:
+  static:
+  media:
+
+services:
   db:
     image: postgres:13
     env_file: .env
@@ -7,31 +13,26 @@ services:
       - pg_data:/var/lib/postgresql/data
 
   backend:
-    build: ./backend
+    image: maksim1995/kittygram_backend:latest
     env_file: .env
-    depends_on:
-      - db
     volumes:
       - static:/backend_static
       - media:/app/media
+    depends_on:
+      - db
 
   frontend:
-    build: ./frontend
+    image: maksim1995/kittygram_frontend:latest
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
 
   gateway:
-    build: ./nginx
-    depends_on:
-      - backend
+    image: maksim1995/kittygram_nginx:latest
     ports:
       - "9000:80"
     volumes:
       - static:/staticfiles
       - media:/media
-
-volumes:
-  pg_data:
-  static:
-  media:
+    depends_on:
+      - backend

@@ -8,7 +8,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django')
 
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'https://kittygram-maksim.duckdns.org']
+ALLOWED_HOSTS = ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'kittygram-maksim.duckdns.org']
 
 INSTALLED_APPS = [
     'django.contrib.admin',

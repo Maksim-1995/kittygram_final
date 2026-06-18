@@ -186,7 +186,7 @@ jobs:
             DB_PORT=5432
             SECRET_KEY=${{ secrets.SECRET_KEY }}
             DEBUG=False
-            ALLOWED_HOSTS=${{ secrets.HOST }}
+            ALLOWED_HOSTS=${{ secrets.HOST }},kittygram-maksim.duckdns.org
             EOF
       # Копируем docker-compose.production.yml на продакшен-сервер
       - name: Copy docker-compose file via scp

@@ -138,6 +138,7 @@ jobs:
   build_gateway_and_push_to_docker_hub:
     name: Push gateway Docker image to DockerHub
     runs-on: ubuntu-latest
+    needs: tests
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
@@ -166,6 +167,26 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+      # Создаём директорию и .env файл на сервере
+      - name: Create directory and .env file on server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            mkdir -p kittygram
+            cat > kittygram/.env << 'EOF'
+            POSTGRES_DB=kittygram
+            POSTGRES_USER=kittygram_user
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            DB_NAME=kittygram
+            DB_HOST=db
+            DB_PORT=5432
+            SECRET_KEY=${{ secrets.SECRET_KEY }}
+            DEBUG=False
+            ALLOWED_HOSTS=${{ secrets.HOST }}
+            EOF
       # Копируем docker-compose.production.yml на продакшен-сервер
       - name: Copy docker-compose.yml via ssh
         uses: appleboy/scp-action@master
@@ -195,7 +216,7 @@ jobs:
             # Выполняет миграции и сбор статики
             sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
             sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
-            sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
+            sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/
 
   send_message:
     runs-on: ubuntu-latest

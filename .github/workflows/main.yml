@@ -206,6 +206,9 @@ jobs:
           script: |
             cd kittygram
             # Выполняет pull образов с Docker Hub
+            # Очистка неиспользуемых ресурсов Docker (не затронет работающие контейнеры)
+            sudo docker system prune -f
+            # Выполняет pull образов с Docker Hub
             sudo docker compose -f docker-compose.production.yml pull
             # Перезапускает все контейнеры в Docker Compose
             sudo docker compose -f docker-compose.production.yml up -d --force-recreate --remove-orphans
